@@ -1,0 +1,50 @@
+scalar DateTime
+
+type Access {
+  id ID!
+  name: String!
+  supplier: Supplier!
+  url: String
+  user: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Supplier {
+  id ID!
+  code: String!
+  name: String!
+  accesses: [Access]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input AccessInput {
+  name: String!
+  supplier: String!
+  url: String
+  user: String
+}
+
+input SupplierInput {
+  code: String!
+  name: String!
+}
+
+
+type Mutation {
+  createAccess(input:AccessInput): Access
+  updateAccess(id: ID!, input:AccessInput): Access
+  createSupplier(input:SupplierInput): Supplier
+  updateSupplier(id: ID!, input:SupplierInput): Supplier
+}
+
+type Query {
+  accesses: [Access]!
+  suppliers: [Supplier]!
+}
+
+type Subscription {
+  accessCreated(): Access!
+  supplierCreated(): Supplier!
+}
