@@ -1,7 +1,7 @@
 scalar DateTime
 
 type Access {
-  id ID!
+  id: ID!
   name: String!
   supplier: Supplier!
   url: String
@@ -11,7 +11,7 @@ type Access {
 }
 
 type Supplier {
-  id ID!
+  id: ID!
   code: String!
   name: String!
   accesses: [Access]!
@@ -42,9 +42,4 @@ type Mutation {
 type Query {
   accesses: [Access]!
   suppliers: [Supplier]!
-}
-
-type Subscription {
-  accessCreated(): Access!
-  supplierCreated(): Supplier!
 }
