@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"labxsubs/model"
 	"strconv"
 	"sync"
 	"sync/atomic"
@@ -34,6 +35,7 @@ type Config struct {
 }
 
 type ResolverRoot interface {
+	Access() AccessResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
 }
@@ -74,14 +76,17 @@ type ComplexityRoot struct {
 	}
 }
 
+type AccessResolver interface {
+	Supplier(ctx context.Context, obj *model.Access) (*Supplier, error)
+}
 type MutationResolver interface {
-	CreateAccess(ctx context.Context, input *AccessInput) (*Access, error)
-	UpdateAccess(ctx context.Context, id string, input *AccessInput) (*Access, error)
+	CreateAccess(ctx context.Context, input *AccessInput) (*model.Access, error)
+	UpdateAccess(ctx context.Context, id string, input *AccessInput) (*model.Access, error)
 	CreateSupplier(ctx context.Context, input *SupplierInput) (*Supplier, error)
 	UpdateSupplier(ctx context.Context, id string, input *SupplierInput) (*Supplier, error)
 }
 type QueryResolver interface {
-	Accesses(ctx context.Context) ([]*Access, error)
+	Accesses(ctx context.Context) ([]*model.Access, error)
 	Suppliers(ctx context.Context) ([]*Supplier, error)
 }
 
@@ -489,7 +494,7 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
-func (ec *executionContext) _Access_id(ctx context.Context, field graphql.CollectedField, obj *Access) (ret graphql.Marshaler) {
+func (ec *executionContext) _Access_id(ctx context.Context, field graphql.CollectedField, obj *model.Access) (ret graphql.Marshaler) {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() {
 		if r := recover(); r != nil {
@@ -526,7 +531,7 @@ func (ec *executionContext) _Access_id(ctx context.Context, field graphql.Collec
 	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Access_name(ctx context.Context, field graphql.CollectedField, obj *Access) (ret graphql.Marshaler) {
+func (ec *executionContext) _Access_name(ctx context.Context, field graphql.CollectedField, obj *model.Access) (ret graphql.Marshaler) {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() {
 		if r := recover(); r != nil {
@@ -563,7 +568,7 @@ func (ec *executionContext) _Access_name(ctx context.Context, field graphql.Coll
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Access_supplier(ctx context.Context, field graphql.CollectedField, obj *Access) (ret graphql.Marshaler) {
+func (ec *executionContext) _Access_supplier(ctx context.Context, field graphql.CollectedField, obj *model.Access) (ret graphql.Marshaler) {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() {
 		if r := recover(); r != nil {
@@ -576,13 +581,13 @@ func (ec *executionContext) _Access_supplier(ctx context.Context, field graphql.
 		Object:   "Access",
 		Field:    field,
 		Args:     nil,
-		IsMethod: false,
+		IsMethod: true,
 	}
 	ctx = graphql.WithResolverContext(ctx, rctx)
 	ctx = ec.Tracer.StartFieldResolverExecution(ctx, rctx)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Supplier, nil
+		return ec.resolvers.Access().Supplier(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -600,7 +605,7 @@ func (ec *executionContext) _Access_supplier(ctx context.Context, field graphql.
 	return ec.marshalNSupplier2ᚖlabxsubsᚐSupplier(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Access_url(ctx context.Context, field graphql.CollectedField, obj *Access) (ret graphql.Marshaler) {
+func (ec *executionContext) _Access_url(ctx context.Context, field graphql.CollectedField, obj *model.Access) (ret graphql.Marshaler) {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() {
 		if r := recover(); r != nil {
@@ -634,7 +639,7 @@ func (ec *executionContext) _Access_url(ctx context.Context, field graphql.Colle
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Access_user(ctx context.Context, field graphql.CollectedField, obj *Access) (ret graphql.Marshaler) {
+func (ec *executionContext) _Access_user(ctx context.Context, field graphql.CollectedField, obj *model.Access) (ret graphql.Marshaler) {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() {
 		if r := recover(); r != nil {
@@ -668,7 +673,7 @@ func (ec *executionContext) _Access_user(ctx context.Context, field graphql.Coll
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Access_createdAt(ctx context.Context, field graphql.CollectedField, obj *Access) (ret graphql.Marshaler) {
+func (ec *executionContext) _Access_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.Access) (ret graphql.Marshaler) {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() {
 		if r := recover(); r != nil {
@@ -705,7 +710,7 @@ func (ec *executionContext) _Access_createdAt(ctx context.Context, field graphql
 	return ec.marshalNDateTime2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Access_updatedAt(ctx context.Context, field graphql.CollectedField, obj *Access) (ret graphql.Marshaler) {
+func (ec *executionContext) _Access_updatedAt(ctx context.Context, field graphql.CollectedField, obj *model.Access) (ret graphql.Marshaler) {
 	ctx = ec.Tracer.StartFieldExecution(ctx, field)
 	defer func() {
 		if r := recover(); r != nil {
@@ -777,10 +782,10 @@ func (ec *executionContext) _Mutation_createAccess(ctx context.Context, field gr
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*Access)
+	res := resTmp.(*model.Access)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalOAccess2ᚖlabxsubsᚐAccess(ctx, field.Selections, res)
+	return ec.marshalOAccess2ᚖlabxsubsᚋmodelᚐAccess(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_updateAccess(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -818,10 +823,10 @@ func (ec *executionContext) _Mutation_updateAccess(ctx context.Context, field gr
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*Access)
+	res := resTmp.(*model.Access)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalOAccess2ᚖlabxsubsᚐAccess(ctx, field.Selections, res)
+	return ec.marshalOAccess2ᚖlabxsubsᚋmodelᚐAccess(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createSupplier(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -937,10 +942,10 @@ func (ec *executionContext) _Query_accesses(ctx context.Context, field graphql.C
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*Access)
+	res := resTmp.([]*model.Access)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalNAccess2ᚕᚖlabxsubsᚐAccess(ctx, field.Selections, res)
+	return ec.marshalNAccess2ᚕᚖlabxsubsᚋmodelᚐAccess(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_suppliers(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1197,10 +1202,10 @@ func (ec *executionContext) _Supplier_accesses(ctx context.Context, field graphq
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*Access)
+	res := resTmp.([]*model.Access)
 	rctx.Result = res
 	ctx = ec.Tracer.StartFieldChildExecution(ctx)
-	return ec.marshalNAccess2ᚕᚖlabxsubsᚐAccess(ctx, field.Selections, res)
+	return ec.marshalNAccess2ᚕᚖlabxsubsᚋmodelᚐAccess(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Supplier_createdAt(ctx context.Context, field graphql.CollectedField, obj *Supplier) (ret graphql.Marshaler) {
@@ -2498,7 +2503,7 @@ func (ec *executionContext) unmarshalInputSupplierInput(ctx context.Context, obj
 
 var accessImplementors = []string{"Access"}
 
-func (ec *executionContext) _Access(ctx context.Context, sel ast.SelectionSet, obj *Access) graphql.Marshaler {
+func (ec *executionContext) _Access(ctx context.Context, sel ast.SelectionSet, obj *model.Access) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.RequestContext, sel, accessImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -2510,18 +2515,27 @@ func (ec *executionContext) _Access(ctx context.Context, sel ast.SelectionSet, o
 		case "id":
 			out.Values[i] = ec._Access_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "name":
 			out.Values[i] = ec._Access_name(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "supplier":
-			out.Values[i] = ec._Access_supplier(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Access_supplier(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "url":
 			out.Values[i] = ec._Access_url(ctx, field, obj)
 		case "user":
@@ -2529,12 +2543,12 @@ func (ec *executionContext) _Access(ctx context.Context, sel ast.SelectionSet, o
 		case "createdAt":
 			out.Values[i] = ec._Access_createdAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "updatedAt":
 			out.Values[i] = ec._Access_updatedAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -2936,7 +2950,7 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) marshalNAccess2ᚕᚖlabxsubsᚐAccess(ctx context.Context, sel ast.SelectionSet, v []*Access) graphql.Marshaler {
+func (ec *executionContext) marshalNAccess2ᚕᚖlabxsubsᚋmodelᚐAccess(ctx context.Context, sel ast.SelectionSet, v []*model.Access) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -2960,7 +2974,7 @@ func (ec *executionContext) marshalNAccess2ᚕᚖlabxsubsᚐAccess(ctx context.C
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOAccess2ᚖlabxsubsᚐAccess(ctx, sel, v[i])
+			ret[i] = ec.marshalOAccess2ᚖlabxsubsᚋmodelᚐAccess(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -3306,11 +3320,11 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
-func (ec *executionContext) marshalOAccess2labxsubsᚐAccess(ctx context.Context, sel ast.SelectionSet, v Access) graphql.Marshaler {
+func (ec *executionContext) marshalOAccess2labxsubsᚋmodelᚐAccess(ctx context.Context, sel ast.SelectionSet, v model.Access) graphql.Marshaler {
 	return ec._Access(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalOAccess2ᚖlabxsubsᚐAccess(ctx context.Context, sel ast.SelectionSet, v *Access) graphql.Marshaler {
+func (ec *executionContext) marshalOAccess2ᚖlabxsubsᚋmodelᚐAccess(ctx context.Context, sel ast.SelectionSet, v *model.Access) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

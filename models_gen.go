@@ -2,15 +2,9 @@
 
 package labx_subs
 
-type Access struct {
-	ID        string    `json:"id"`
-	Name      string    `json:"name"`
-	Supplier  *Supplier `json:"supplier"`
-	URL       *string   `json:"url"`
-	User      *string   `json:"user"`
-	CreatedAt string    `json:"createdAt"`
-	UpdatedAt string    `json:"updatedAt"`
-}
+import (
+	"labxsubs/model"
+)
 
 type AccessInput struct {
 	Name     string  `json:"name"`
@@ -20,12 +14,12 @@ type AccessInput struct {
 }
 
 type Supplier struct {
-	ID        string    `json:"id"`
-	Code      string    `json:"code"`
-	Name      string    `json:"name"`
-	Accesses  []*Access `json:"accesses"`
-	CreatedAt string    `json:"createdAt"`
-	UpdatedAt string    `json:"updatedAt"`
+	ID        string          `json:"id"`
+	Code      string          `json:"code"`
+	Name      string          `json:"name"`
+	Accesses  []*model.Access `json:"accesses"`
+	CreatedAt string          `json:"createdAt"`
+	UpdatedAt string          `json:"updatedAt"`
 }
 
 type SupplierInput struct {

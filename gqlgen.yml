@@ -10,6 +10,11 @@ exec:
 model:
   filename: models_gen.go
 resolver:
-  filename: resolver.go
+  filename: resolver_gen.go
   type: Resolver
+models:
+  Access:
+    model: labxsubs/model.Access
+  Supplier:
+    model: labxsubs/model.Supplier
 autobind: []
